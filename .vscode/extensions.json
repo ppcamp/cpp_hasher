@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "ms-vscode.cmake-tools",
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "ms-vscode.makefile-tools",
+        "bierner.markdown-mermaid",
+        "ms-vscode.cpptools"
+    ]
+}

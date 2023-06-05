@@ -1,5 +1,10 @@
 {
     "cmake.configureSettings": {
         "CMAKE_TOOLCHAIN_FILE": "/opt/microsoft/vcpkg/scripts/buildsystems/vcpkg.cmake",
+    },
+    "files.associations": {
+        "*.csv": "plaintext",
+        "iostream": "cpp",
+        "ostream": "cpp"
     }
 }

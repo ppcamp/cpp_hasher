@@ -1,7 +1,7 @@
 #include <fmt/color.h>
+#include "hash/hasher.hpp"
 
 int main()
 {
-    fmt::print(fg(fmt::color::cyan) | fmt::emphasis::bold,
-               "Hello, {}!\n", "world");
+    hasher::print();
 }

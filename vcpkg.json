@@ -6,6 +6,10 @@
         {
             "name": "fmt",
             "version>=": "10.0.0"
+        },
+        {
+            "name": "gtest",
+            "version>=": "1.10.0#4"
         }
     ],
     "builtin-baseline": "3426db05b996481ca31e95fff3734cf23e0f51bc"

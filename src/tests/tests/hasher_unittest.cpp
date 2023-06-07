@@ -2,7 +2,7 @@
 
 namespace hasher
 {
-    TEST(MainTester, TestBasic)
+    TEST(HasherLibrary, TestBasic)
     {
         EXPECT_EQ(1, 1);
     }

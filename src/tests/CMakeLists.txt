@@ -17,8 +17,8 @@ enable_testing()
 
 message(STATUS "Adding tests")
 set(TEST_SOURCES
-    src/tests/hasher/test.cpp
-    src/tests/example/test.cpp
+    src/tests/tests/example_unittest.cpp
+    src/tests/tests/hasher_unittest.cpp
     ${SOURCES})
 
 message(STATUS "Test sources: ${TEST_SOURCES}")

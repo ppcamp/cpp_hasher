@@ -1,6 +1,9 @@
 # cpp hasher
 
-A simple example of how to implement a hash function/algorithm
+A simple example of how to implement a hash function/algorithm.
+
+This repo also uses `vcpkg` to manage dependencies. All building process is done by using `Cmake`.
+For unit tests, this repo uses the `Google test suite`.
 
 
 ## Dependecies

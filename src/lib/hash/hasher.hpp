@@ -1,5 +1,4 @@
-#include <iostream>
-
+#pragma once
 namespace hasher
 {
     void print();

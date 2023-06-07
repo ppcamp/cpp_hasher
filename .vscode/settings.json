@@ -5,6 +5,11 @@
     "files.associations": {
         "*.csv": "plaintext",
         "iostream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "random": "cpp",
+        "chrono": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "*.tcc": "cpp"
     }
 }

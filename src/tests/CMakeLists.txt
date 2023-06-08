@@ -20,14 +20,18 @@ set(TEST_SOURCES
     src/tests/tests/example_unittest.cpp
     src/tests/tests/hasher_unittest.cpp
     ${SOURCES})
+set(TEST_LIBRARIES
+    GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main
+    ${LIBRARIES})
 
 message(STATUS "Test sources: ${TEST_SOURCES}")
+message(STATUS "Test libraries: ${TEST_LIBRARIES}")
 add_executable(tester ${TEST_SOURCES})
 
 message(STATUS "Adding libraries")
 find_package(GTest CONFIG REQUIRED)
 target_include_directories(tester PRIVATE src/lib)
-target_link_libraries(tester PRIVATE ${LIBRARIES} GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+target_link_libraries(tester PRIVATE )
 
 message(STATUS "Setting CTest")
 gtest_discover_tests(tester)

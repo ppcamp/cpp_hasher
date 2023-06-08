@@ -71,3 +71,6 @@ sudo apt install gdb
 # Installing vcpkg dependencies (packages dependecies)
 cd vcpkg && vcpkg install #-x-install-root=..
 ```
+
+See [here](https://learn.microsoft.com/pt-br/vcpkg/users/versioning#version-schemes) for more infos
+about the `vcpkg` (package manager). [Here](https://vcpkg.io/en/packages.html) to search for pkgs.

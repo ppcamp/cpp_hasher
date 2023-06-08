@@ -4,6 +4,16 @@ include(CTest)
 include(GoogleTest)
 enable_testing()
 
+# Include support to show the test scenarios in the IDE
+include(FetchContent)
+FetchContent_Declare(
+ googletest
+ URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
 message(STATUS "Adding tests")
 set(TEST_SOURCES
     src/tests/tests/example_unittest.cpp

@@ -69,5 +69,5 @@ sudo apt install cmake pkg-config
 sudo apt install gdb
 
 # Installing vcpkg dependencies (packages dependecies)
-vcpkg install
+cd vcpkg && vcpkg install #-x-install-root=..
 ```

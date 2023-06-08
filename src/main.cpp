@@ -1,15 +1,15 @@
 #include <fmt/color.h>
 #include "hash/hasher.hpp"
 #include <iostream>
+#include <map>
 
 int main()
 {
     try
     {
-        auto a = hasher::Basic();
-        a[0] = 1;
-        a[1] = 2;
-        a[2] = 3;
+        auto a = hasher::Copilot();
+        a.insert(1, 0);
+        a.insert(2, 3);
         a.print();
     }
     catch (const std::exception &e)

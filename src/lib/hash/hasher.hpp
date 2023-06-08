@@ -1,26 +1,46 @@
 #pragma once
 namespace hasher
 {
-#define CAPACITY 5000
-
-    class Basic
+    class Copilot
     {
     public:
-        Basic();
-        ~Basic();
+        Copilot();
+        ~Copilot();
+        void insert(int key, int value);
+        void remove(int key);
+        int get(int key);
+
+        // int &operator=(int rhs)
+        // {
+        //     return m_element[rhs];
+        // }
+        // int &operator[](const int key)
+        // {
+        //     return get(key);
+        // }
+
         void print();
 
-        int &operator=(int rhs)
-        {
-            return m_element[rhs];
-        }
-        int &operator[](const int index)
-        {
-            return m_element[index];
-        }
-
     private:
-        unsigned long hash_function(char *str);
-        int m_element[10];
+        int size;
+        int capacity;
+        int *keys;
+        int *values;
+        int hash(int key);
+        void resize();
+    };
+
+#define BucketCntBits 3
+#define BucketCnt (1 << BucketCntBits)
+
+#define LoadFactorNum 13
+#define LoadFactorDen 2
+
+    class HashTable
+    {
+    private:
+    public:
+        HashTable();
+        ~HashTable();
     };
 }

@@ -3,34 +3,108 @@
 #include <iostream>
 #include "hasher.hpp"
 
-hasher::Basic::Basic()
-{
-}
+using namespace hasher;
 
-hasher::Basic::~Basic()
+Copilot::Copilot()
 {
-}
-
-void hasher::Basic::print()
-{
-    // See https://hackingcpp.com/cpp/libs/fmt.html
-    fmt::print(fg(fmt::color::cyan) | fmt::emphasis::bold, "{: ^30}", "Data\n");
-    fmt::println("");
-    for (int i = 0; i < 10; i++)
+    size = 0;
+    capacity = 10;
+    keys = new int[capacity];
+    values = new int[capacity];
+    for (int i = 0; i < capacity; i++)
     {
-        fmt::println("{: ^30}", m_element[i]);
+        keys[i] = -1;
+        values[i] = -1;
     }
-    fmt::print(fg(fmt::color::cyan) | fmt::emphasis::bold, "{: ^30}", "End Data\n");
-    fmt::println("");
+}
+Copilot::~Copilot()
+{
+    delete[] keys;
+    delete[] values;
 }
 
-unsigned long hasher::Basic::hash_function(char *str)
+void Copilot::remove(int key)
 {
-    unsigned long hash = 5381;
-    int c;
+    int index = hash(key);
+    while (keys[index] != key)
+    {
+        index = (index + 1) % capacity;
+    }
+    keys[index] = -1;
+    values[index] = -1;
+    size--;
+}
 
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+void Copilot::insert(int key, int value)
+{
+    if (size == capacity)
+    {
+        resize();
+    }
+    int index = hash(key);
+    while (keys[index] != -1)
+    {
+        index = (index + 1) % capacity;
+    }
+    keys[index] = key;
+    values[index] = value;
+    size++;
+}
 
-    return hash % CAPACITY;
+int Copilot::get(int key)
+{
+    int index = hash(key);
+    while (keys[index] != key)
+    {
+        index = (index + 1) % capacity;
+    }
+    return values[index];
+}
+
+void Copilot::print()
+{
+    for (int i = 0; i < capacity; i++)
+    {
+        if (keys[i] != -1)
+        {
+            std::cout << keys[i] << " " << values[i] << std::endl;
+        }
+    }
+}
+
+int Copilot::hash(int key)
+{
+    return key % capacity;
+}
+
+void Copilot::resize()
+{
+    int *oldKeys = keys;
+    int *oldValues = values;
+    int oldCapacity = capacity;
+    capacity *= 2;
+    keys = new int[capacity];
+    values = new int[capacity];
+    for (int i = 0; i < capacity; i++)
+    {
+        keys[i] = -1;
+        values[i] = -1;
+    }
+    for (int i = 0; i < oldCapacity; i++)
+    {
+        if (oldKeys[i] != -1)
+        {
+            insert(oldKeys[i], oldValues[i]);
+        }
+    }
+    delete[] oldKeys;
+    delete[] oldValues;
+}
+
+hasher::HashTable::HashTable()
+{
+}
+
+hasher::HashTable::~HashTable()
+{
 }

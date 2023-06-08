@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(NOTICE "CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
 
 set(main ${PROJECT_NAME})
-set(LIBRARIES fmt::fmt)
+set(LIBRARIES fmt::fmt absl::any absl::log absl::base absl::bits)
 
 set(SOURCES
     src/lib/hash/hasher.cpp
@@ -25,6 +25,7 @@ add_executable(main src/main.cpp ${SOURCES})
 message(STATUS "Adding libraries")
 target_include_directories(main PRIVATE src/lib)
 find_package(fmt CONFIG REQUIRED)
+find_package(absl CONFIG REQUIRED)
 target_link_libraries(main PRIVATE ${LIBRARIES})
 
 message(STATUS "Setting up tests")

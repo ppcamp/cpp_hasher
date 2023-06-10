@@ -16,10 +16,9 @@ set(LIBRARIES
     CACHE INTERNAL "")
 message(NOTICE "LIBRARIES: ${LIBRARIES}")
 
-set(SOURCES
-    src/lib/hash/hasher.cpp
-    src/lib/map/map.cpp
-    CACHE INTERNAL "")
+# set(SOURCES src/lib/map/map.cpp CACHE INTERNAL "")
+file(GLOB_RECURSE MATCHED_CPPS src/lib/*/*.cpp)
+set(SOURCES ${MATCHED_CPPS} CACHE INTERNAL "")
 message(NOTICE "SOURCES: ${SOURCES}")
 
 set(CMAKE_TOOLCHAIN_FILE ./vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")

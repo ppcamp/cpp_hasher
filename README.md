@@ -52,6 +52,7 @@ Note¹: See `/usr/include/c++/11/bits/stl_map.h`
 - https://abseil.io/blog/20180927-swisstables
 - https://www.youtube.com/watch?v=ncHmEUmJZf4&ab_channel=CppCon
 - https://stackoverflow.com/a/3341737
+- https://datastructures.maximal.io/hash-tables/
 
 ## Dependecies
 

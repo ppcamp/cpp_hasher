@@ -15,11 +15,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 message(STATUS "Adding tests")
-set(TEST_SOURCES
-    src/tests/tests/example_unittest.cpp
-    src/tests/tests/hasher_unittest.cpp
-    src/tests/tests/map_unittest.cpp
-    ${SOURCES})
+file(GLOB_RECURSE MATCHED_TESTS src/tests/*_unittest.cpp)
+set(TEST_SOURCES ${MATCHED_TESTS} ${SOURCES} CACHE INTERNAL "")
 set(TEST_LIBRARIES
     GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main
     ${LIBRARIES})

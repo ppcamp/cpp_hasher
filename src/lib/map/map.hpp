@@ -1,59 +1,186 @@
 #pragma once
 
 #ifndef HASHER_MACROS
-#define HASHER_MACROS true
-#define BucketCntBits 3
-#define BucketCnt (1 << BucketCntBits)
-#define LoadFactorNum 13
-#define LoadFactorDen 2
+#define HASHER_MACROS
+#define BUCKET_N_MULTIPLIER 3
+#define BUCKET_N (1 << BUCKET_N_MULTIPLIER)
+#define HASHTABLE_CAPACITY_GROW_MULTIPLIER 1.5
+#define HASHTABLE_DEFAULT_CAPACITY 100
 #endif
+
+#include <cstdint>
 
 #include "hash/hasher.hpp"
 
 namespace implmap {
+
+/// @brief Basic hash table implementation
+/// @tparam KeyType Type of the key
+/// @tparam ValueType Type of the value
+/// @note This implmentation isn't thread-safe
+/// @todo Reduce hashtable size when we pop an element
 template <typename KeyType, typename ValueType>
 class Basic {
  public:
-  Basic() {}
-  ~Basic() {}
-  void insert(int key, int value) {}
-  void remove(int key) {}
-
-  ValueType get(KeyType key) {
-    ValueType value;
-    return value;
+  Basic() {
+    m_capacity = HASHTABLE_DEFAULT_CAPACITY;
+    m_size = 0;
+    m_table = create_table(m_capacity);
   }
 
-  // int &operator=(int rhs)
-  // {
-  //     return m_element[rhs];
-  // }
-  // int &operator[](const int key)
-  // {
-  //     return get(key);
-  // }
+  ~Basic() {}
+
+  ///@brief Remove the element with the given key
+  ///@param key Key to search for
+  ///@note If the key is not found, nothing happens
+  ///@todo This function should reduce the size of the hashtable basing on the
+  /// load factor (size/capacity)
+  void remove(KeyType key) {
+    const uint32_t pos = get_index(key);
+    const auto table = m_table[pos];
+    for (size_t p = 0; p < table.size; p++) {
+      if (table.buckets[p].key == key) {
+        // we found the key, so we need to remove it
+        // we can do this by moving the last element to the position of the
+        // element we want to remove
+        table.buckets[p] = table.buckets[table.size - 1];
+        table.size--;
+        m_size--;
+        return;
+      }
+    }
+  }
+
+  //   ValueType& operator=(KeyType key) {
+  //     auto a = get(key);
+  //     return a;
+  //   }
+  //   ValueType &operator[](const int key)
+  //   {
+  //     auto a = insertAt(m_table, key, 0);
+  //       return get(key);
+  //   }
 
   void print() {}
 
+  void erase() {
+    for (int i = 0; i < m_capacity; i++) {
+      delete[] m_table[i].items;
+    }
+    delete[] m_table;
+  }
+
  private:
-  /// @brief Current number of keys in the hash table
-  int m_size;
+  struct BucketItem {
+    KeyType key;
+    ValueType value;
+  };
 
-  /// @brief Current capacity of the hash table (number of buckets/positions
-  /// available)
-  int m_capacity;
+  struct Bucket {
+    /// @brief Number of items in the bucket
+    uint32_t size;
 
-  int *m_keys;
-  int *m_values;
-  int hash(KeyType key) {
+    /// @brief Array of elements in the bucket (key-value pairs), where the key
+    /// is the same.
+    BucketItem* items;
+  };
+
+  /// @brief Get the current value associated with the given key
+  /// @param key Key to search for
+  /// @return Pointer to the value associated with the given key, or nullptr if
+  /// the key is not found
+  ValueType* get(KeyType key) {
+    const uint32_t pos = get_index(key);
+    const auto table = m_table[pos];
+    for (size_t p = 0; p < table.size; p++) {
+      if (table.buckets[p].key == key) {
+        return &table.buckets[p].value;
+      }
+    }
+    return nullptr;
+  }
+
+  /// @brief Insert a new key-value pair in the hash table
+  /// @param key Key to insert
+  /// @param value Value to insert
+  /// @note If the key already exists, the value is updated
+  /// @note If the number of elements in the bucket is equal to BUCKET_N, the
+  /// hash table is resized
+  /// @todo Implement a better way to handle collisions
+  /// @todo Check what happens if we call a resize and inside of a resize we
+  /// call another one?
+  void insertAt(const Bucket& htable, KeyType key, ValueType value) {
+    const uint32_t pos = get_index(key);
+    if (htable[pos].size == BUCKET_N) {
+      // we reached the max number of elements in the bucket, thus, we have more
+      // than BUCKET_N colisions, so we need to resize the hash htable[pos]
+      resize();
+    }
+
+    // update if the key already exists
+    for (size_t p = 0; p < htable[pos].size; p++) {
+      if (htable[pos].buckets[p].key == key) {
+        htable[pos].buckets[p].value = value;
+      }
+    }
+
+    // insert the new key
+    htable[pos].buckets[htable[pos].size] = {key, value};
+    htable[pos].size++;
+    m_size++;
+  }
+
+  /// @brief Create a new hash table with the given capacity
+  void resize() {
+    const uint32_t new_capacity =
+        m_capacity * HASHTABLE_CAPACITY_GROW_MULTIPLIER;
+    Bucket* new_table = create_table(new_capacity);
+
+    // iterate over the old table and insert the elements in the new table
+    for (size_t i = 0; i < m_capacity; i++) {
+      const auto table = m_table[i];
+      for (size_t p = 0; p < table.size; p++) {
+        KeyType key = table.buckets[p].key;
+        ValueType value = table.buckets[p].value;
+        insertAt(new_table, key, value);
+      }
+    }
+
+    // delete the old table
+    erase();
+
+    m_capacity = new_capacity;
+    m_table = new_table;
+  }
+
+  /// @brief Create a new hash table
+  /// @param cap Capacity of the new hash table
+  /// @return Pointer to the new hash table
+  Bucket* create_table(uint32_t cap) {
+    Bucket* table = new Bucket[m_capacity];
+    for (int i = 0; i < m_capacity; i++) {
+      table[i].items = new BucketItem[BUCKET_N];
+      table[i].size = 0;
+    }
+    return table;
+  }
+
+  /// @brief Get the index of the bucket where the given key should be stored
+  /// @param key Key to search for the bucket
+  /// @return Index of the bucket where the given key should be stored
+  uint32_t get_index(KeyType key) {
     // return key % m_capacity;
     return implmap::hash(key) % m_capacity;
   }
 
-  void resize() {}
-  /// @brief Checks if the hash table should be resized
-  /// @see https://en.wikipedia.org/wiki/Hash_table#Load_factor
-  /// @return
-  bool should_resize() { return true; }
+  /// @brief Current number of keys in the hash table
+  uint32_t m_size;
+
+  /// @brief Current capacity of the hash table (number of buckets/positions
+  /// available)
+  uint32_t m_capacity;
+
+  /// @brief Array of buckets
+  Bucket* m_table;
 };
 }  // namespace implmap

@@ -69,7 +69,8 @@
         "numbers": "cpp",
         "semaphore": "cpp",
         "typeinfo": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "cinttypes": "cpp"
     },
     "C_Cpp.clang_format_fallbackStyle": "Google"
 }

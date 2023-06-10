@@ -6,7 +6,7 @@ message(NOTICE "PROJECT_NAME: ${PROJECT_NAME}")
 
 set(main ${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(NOTICE "CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
 
@@ -42,6 +42,9 @@ include(CTest)
 include(GoogleTest)
 enable_testing()
 include(src/tests/CMakeLists.txt)
+
+message(STATUS "Setting up benchmarks")
+include(src/benchmarks/CMakeLists.txt)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

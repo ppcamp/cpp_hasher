@@ -1,7 +1,6 @@
 #include <fmt/color.h>
 
 #include <iostream>
-#include <map>
 
 int main() {
   try {

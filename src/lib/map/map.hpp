@@ -8,7 +8,11 @@
 #define HASHTABLE_DEFAULT_CAPACITY 100
 #endif
 
+#include <fmt/core.h>
+
 #include <cstdint>
+#include <iomanip>
+#include <iostream>
 
 #include "hash/hasher.hpp"
 
@@ -37,14 +41,13 @@ class Basic {
   /// load factor (size/capacity)
   void remove(KeyType key) {
     const uint32_t pos = get_index(key);
-    const auto table = m_table[pos];
-    for (size_t p = 0; p < table.size; p++) {
-      if (table.buckets[p].key == key) {
+    for (size_t p = 0; p < m_table[pos].size; p++) {
+      if (m_table[pos].items[p].key == key) {
         // we found the key, so we need to remove it
         // we can do this by moving the last element to the position of the
         // element we want to remove
-        table.buckets[p] = table.buckets[table.size - 1];
-        table.size--;
+        m_table[pos].items[p] = m_table[pos].items[m_table[pos].size - 1];
+        m_table[pos].size--;
         m_size--;
         return;
       }
@@ -61,7 +64,33 @@ class Basic {
   //       return get(key);
   //   }
 
-  void print() {}
+  void insert(KeyType key, ValueType value) { insertAt(m_table, key, value); }
+
+  /// @brief Get the current value associated with the given key
+  /// @param key Key to search for
+  /// @return Pointer to the value associated with the given key, or nullptr if
+  /// the key is not found
+  ValueType* get(KeyType key) {
+    const uint32_t pos = get_index(key);
+    const auto table = m_table[pos];
+    for (size_t p = 0; p < table.size; p++) {
+      if (table.items[p].key == key) {
+        return &table.items[p].value;
+      }
+    }
+    return nullptr;
+  }
+
+  void print() {
+    for (int i = 0; i < m_capacity; i++) {
+      const auto table = m_table[i];
+      for (size_t p = 0; p < table.size; p++) {
+        fmt::print("{:^10}", fmt::format("table({},{}) ", table.items[p].key,
+                                         table.items[p].value));
+      }
+      if (table.size > 0) std::cout << std::endl;
+    }
+  }
 
   void erase() {
     for (int i = 0; i < m_capacity; i++) {
@@ -85,21 +114,6 @@ class Basic {
     BucketItem* items;
   };
 
-  /// @brief Get the current value associated with the given key
-  /// @param key Key to search for
-  /// @return Pointer to the value associated with the given key, or nullptr if
-  /// the key is not found
-  ValueType* get(KeyType key) {
-    const uint32_t pos = get_index(key);
-    const auto table = m_table[pos];
-    for (size_t p = 0; p < table.size; p++) {
-      if (table.buckets[p].key == key) {
-        return &table.buckets[p].value;
-      }
-    }
-    return nullptr;
-  }
-
   /// @brief Insert a new key-value pair in the hash table
   /// @param key Key to insert
   /// @param value Value to insert
@@ -109,7 +123,7 @@ class Basic {
   /// @todo Implement a better way to handle collisions
   /// @todo Check what happens if we call a resize and inside of a resize we
   /// call another one?
-  void insertAt(const Bucket& htable, KeyType key, ValueType value) {
+  void insertAt(Bucket* htable, KeyType key, ValueType value) {
     const uint32_t pos = get_index(key);
     if (htable[pos].size == BUCKET_N) {
       // we reached the max number of elements in the bucket, thus, we have more
@@ -119,13 +133,14 @@ class Basic {
 
     // update if the key already exists
     for (size_t p = 0; p < htable[pos].size; p++) {
-      if (htable[pos].buckets[p].key == key) {
-        htable[pos].buckets[p].value = value;
+      if (htable[pos].items[p].key == key) {
+        htable[pos].items[p].value = value;
+        return;
       }
     }
 
     // insert the new key
-    htable[pos].buckets[htable[pos].size] = {key, value};
+    htable[pos].items[htable[pos].size] = {key, value};
     htable[pos].size++;
     m_size++;
   }
@@ -140,8 +155,8 @@ class Basic {
     for (size_t i = 0; i < m_capacity; i++) {
       const auto table = m_table[i];
       for (size_t p = 0; p < table.size; p++) {
-        KeyType key = table.buckets[p].key;
-        ValueType value = table.buckets[p].value;
+        KeyType key = table.items[p].key;
+        ValueType value = table.items[p].value;
         insertAt(new_table, key, value);
       }
     }

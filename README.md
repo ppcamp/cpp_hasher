@@ -44,6 +44,17 @@ by the C++ [abseil lib](https://abseil.io/docs/cpp/).
 
 Note¹: See `/usr/include/c++/11/bits/stl_map.h`
 
+
+### Result:
+
+```bash
+Benchmarks:
+
+- bench insertion using my map: 24µs
+- bench insertion using Cpp map: 3µs
+- bench insertion using Cpp unordered map: 3µs
+```
+
 ### See
 
 - https://www.digitalocean.com/community/tutorials/hash-table-in-c-plus-plus
@@ -53,6 +64,7 @@ Note¹: See `/usr/include/c++/11/bits/stl_map.h`
 - https://www.youtube.com/watch?v=ncHmEUmJZf4&ab_channel=CppCon
 - https://stackoverflow.com/a/3341737
 - https://datastructures.maximal.io/hash-tables/
+- http://google.github.io/googletest/reference/assertions.html
 
 ## Dependecies
 

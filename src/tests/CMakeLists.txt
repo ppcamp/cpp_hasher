@@ -18,6 +18,7 @@ message(STATUS "Adding tests")
 set(TEST_SOURCES
     src/tests/tests/example_unittest.cpp
     src/tests/tests/hasher_unittest.cpp
+    src/tests/tests/map_unittest.cpp
     ${SOURCES})
 set(TEST_LIBRARIES
     GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main

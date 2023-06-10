@@ -1,46 +1,15 @@
 #pragma once
-namespace hasher
-{
-    class Copilot
-    {
-    public:
-        Copilot();
-        ~Copilot();
-        void insert(int key, int value);
-        void remove(int key);
-        int get(int key);
 
-        // int &operator=(int rhs)
-        // {
-        //     return m_element[rhs];
-        // }
-        // int &operator[](const int key)
-        // {
-        //     return get(key);
-        // }
+#include <functional>
 
-        void print();
-
-    private:
-        int size;
-        int capacity;
-        int *keys;
-        int *values;
-        int hash(int key);
-        void resize();
-    };
-
-#define BucketCntBits 3
-#define BucketCnt (1 << BucketCntBits)
-
-#define LoadFactorNum 13
-#define LoadFactorDen 2
-
-    class HashTable
-    {
-    private:
-    public:
-        HashTable();
-        ~HashTable();
-    };
+namespace implmap {
+/// @brief Computes the hash of a value
+/// @tparam T A type that can be hashed such as int, float, string, etc.
+/// @param value The value to hash
+/// @return Hash of the value
+/// @todo Implement a hash function manually
+template <typename T>
+uint hash(const T value) {
+  return std::hash<T>{}(value);
 }
+}  // namespace implmap

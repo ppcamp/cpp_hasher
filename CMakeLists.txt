@@ -18,6 +18,7 @@ message(NOTICE "LIBRARIES: ${LIBRARIES}")
 
 set(SOURCES
     src/lib/hash/hasher.cpp
+    src/lib/map/map.cpp
     CACHE INTERNAL "")
 message(NOTICE "SOURCES: ${SOURCES}")
 
